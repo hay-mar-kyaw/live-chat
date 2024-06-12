@@ -3,9 +3,15 @@ import './assets/global.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import {auth} from './firebase/config'
 
-const app = createApp(App)
+let app;
 
-app.use(router)
+auth.onAuthStateChanged(()=>{
+    if(!app){
+        
+        app=createApp(App).use(router).mount('#app')
+    }
+})
 
-app.mount('#app')
+

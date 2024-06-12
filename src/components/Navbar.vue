@@ -1,10 +1,9 @@
 <template>
     <div>
-        <nav>
+        <nav v-if="user">
             <div>
-                <p>Hi display name</p>
-                <p class="email">logged in email</p>
-                
+                <p>Hi {{ user.displayName }}</p>
+                <p class="email">logged in as {{ user.email }}</p>
             </div>
             <button @click="logout">logout</button>
         </nav>
@@ -12,23 +11,28 @@
 </template>
 
 <script>
-import {auth} from '../firebase/config'
-import {ref} from 'vue'
+import getUser from '@/composables/getUser'
+import useLogout from '@/composables/useLogout';
+// import { useRouter } from 'vue-router';
 export default {
     setup () {
-        let error=ref(null)
-        let logout=async()=>{
-            try{
-                await auth.signOut()
-                console.log('you are logout');
-            }catch(err){
-                error.value=err.message;
-            }
-                
-               }
+        
+        // let router = useRouter()
+        //getting user composables
+        let {user}=getUser();
+        
+        let {error,logout}=useLogout();
+        
+        // let signOut=()=>{
+        //     logout();
+        //     router.push({name:"welcome"})
+        // }
+            
         return {
             error,
-            logout
+            logout,
+            user,
+            
         }
     }
 }
